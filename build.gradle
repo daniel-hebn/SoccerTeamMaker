@@ -11,6 +11,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
@@ -32,9 +33,20 @@ dependencies {
 	compile('org.projectlombok:lombok')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.flywaydb:flyway-core')
 	runtime('com.h2database:h2')
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	// ObjectMapper
+	compile 'org.modelmapper:modelmapper:0.7.3'
+
+	compile 'org.apache.commons:commons-lang3:3.4'
+
+	// QueryDSL
+	compile "com.querydsl:querydsl-core:4.1.3";
+	compile "com.querydsl:querydsl-apt:4.1.3";
+	compile "com.querydsl:querydsl-jpa:4.1.3";
 }
 
 
@@ -44,3 +56,36 @@ eclipse {
 		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
 	}
 }
+
+// setting QueryDSL
+idea {
+	module {
+		inheritOutputDirs = false
+		sourceDirs += file('generated/')
+		outputDir = file("$buildDir/classes/main/")
+	}
+}
+
+sourceSets {
+	generated {
+		java {
+			srcDirs = ['generated/']
+		}
+	}
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build') {
+	source = sourceSets.main.java
+	classpath = configurations.compile
+	options.compilerArgs = [
+			"-proc:only",
+			"-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+	]
+	destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+}
+
+clean {
+	delete sourceSets.generated.java.srcDirs
+}
+
+tasks.compileJava.dependsOn clean, processResources, generateQueryDSL

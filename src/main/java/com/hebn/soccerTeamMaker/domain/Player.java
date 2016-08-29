@@ -1,5 +1,6 @@
 package com.hebn.soccerTeamMaker.domain;
 
+import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -7,8 +8,8 @@ import javax.persistence.*;
 /**
  * Created by greg.lee on 2016. 8. 23..
  */
+@Data
 @Entity
-@Getter
 public class Player {
 
     @Id
@@ -19,6 +20,9 @@ public class Player {
     private Integer age;
 
     @Enumerated(EnumType.STRING)
+    private Level level;
+
+    @Enumerated(EnumType.STRING)
     private Position position;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,5 +31,9 @@ public class Player {
 
     public enum Position {
         FORWARD, MIDFIELDER, DEFENDER, GOALKEEPER;
+    }
+
+    public enum Level {
+        HIGH, MIDDLE, LOW;
     }
 }
