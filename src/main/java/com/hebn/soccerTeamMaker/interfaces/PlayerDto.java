@@ -24,4 +24,13 @@ public class PlayerDto {
         private String position;
         private String teamName;
     }
+
+    @Data
+    public static class Create {
+        private Integer backNumber;
+        private String level;
+        private String name;
+        private String position;
+        private Integer teamId;
+    }
 }

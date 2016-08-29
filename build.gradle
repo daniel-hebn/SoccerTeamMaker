@@ -33,6 +33,7 @@ dependencies {
 	compile('org.projectlombok:lombok')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
+
 	compile('org.flywaydb:flyway-core')
 	runtime('com.h2database:h2')
 	runtime('mysql:mysql-connector-java')
@@ -41,6 +42,7 @@ dependencies {
 	// ObjectMapper
 	compile 'org.modelmapper:modelmapper:0.7.3'
 
+	// apache commons-lang
 	compile 'org.apache.commons:commons-lang3:3.4'
 
 	// QueryDSL
@@ -58,19 +60,20 @@ eclipse {
 }
 
 // setting QueryDSL
-idea {
-	module {
-		inheritOutputDirs = false
-		sourceDirs += file('generated/')
-		outputDir = file("$buildDir/classes/main/")
-	}
-}
-
 sourceSets {
 	generated {
 		java {
 			srcDirs = ['generated/']
 		}
+	}
+}
+
+idea {
+	module {
+//		inheritOutputDirs = false
+		sourceDirs += file('generated/')
+//		generatedSourceDirs += file('generated/')
+//		outputDir = file("$buildDir/classes/main/")
 	}
 }
 
@@ -88,4 +91,15 @@ clean {
 	delete sourceSets.generated.java.srcDirs
 }
 
-tasks.compileJava.dependsOn clean, processResources, generateQueryDSL
+compileJava {
+	dependsOn generateQueryDSL
+	source generateQueryDSL.destinationDir
+}
+
+compileGeneratedJava {
+	dependsOn generateQueryDSL
+	options.warnings = false
+	classpath += sourceSets.main.runtimeClasspath
+}
+
+//tasks.compileJava.dependsOn clean, processResources, generateQueryDSL

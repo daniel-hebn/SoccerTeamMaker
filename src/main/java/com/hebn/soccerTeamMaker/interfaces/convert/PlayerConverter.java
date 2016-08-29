@@ -39,4 +39,11 @@ public class PlayerConverter {
         return booleanBuilder.getValue();
     }
 
+    public Player convert(PlayerDto.Create createParam) {
+        Player player = modelMapper.map(createParam, Player.class);
+        player.setLevel(Player.Level.valueOf(createParam.getLevel()));
+        player.setPosition(Player.Position.valueOf(createParam.getPosition()));
+        return player;
+    }
+
 }
