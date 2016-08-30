@@ -1,13 +1,17 @@
 package com.hebn.soccerTeamMaker.application;
 
+import com.google.common.collect.Lists;
 import com.hebn.soccerTeamMaker.domain.Player;
 import com.hebn.soccerTeamMaker.domain.PlayerRepository;
-
+import com.hebn.soccerTeamMaker.domain.QPlayer;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by greg.lee on 2016. 8. 29..
@@ -21,6 +25,18 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player findBy(Long id) {
         return playerRepository.findOne(id);
+    }
+
+    @Override
+    public List<Player> findByTeamId(Long teamId) {
+        if (teamId == null)
+            throw new IllegalArgumentException("teamId is required");
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        QPlayer player = QPlayer.player;
+        booleanBuilder.and(player.usable.eq(true));
+        booleanBuilder.and(player.team.id.eq(teamId));
+        return Lists.newArrayList(playerRepository.findAll(booleanBuilder.getValue()));
     }
 
     @Override

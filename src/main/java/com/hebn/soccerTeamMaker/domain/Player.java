@@ -29,6 +29,8 @@ public class Player {
     @JoinColumn(name = "teamId")
     private Team team;
 
+    private Boolean usable;
+
     public enum Position {
         FORWARD, MIDFIELDER, DEFENDER, GOALKEEPER;
     }

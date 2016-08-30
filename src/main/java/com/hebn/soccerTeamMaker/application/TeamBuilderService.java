@@ -6,4 +6,5 @@ package com.hebn.soccerTeamMaker.application;
 
 public interface TeamBuilderService {
 
+    void teamBuilding(Long teamId);
 }

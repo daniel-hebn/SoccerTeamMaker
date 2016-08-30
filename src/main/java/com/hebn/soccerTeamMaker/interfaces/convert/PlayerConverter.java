@@ -27,6 +27,7 @@ public class PlayerConverter {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         QPlayer player = QPlayer.player;
 
+        booleanBuilder.and(player.usable.eq(true));
         if (StringUtils.isNotEmpty(condition.getLevel()))
             booleanBuilder.and(player.level.eq(Player.Level.valueOf(condition.getLevel())));
         if (StringUtils.isNotEmpty(condition.getName()))

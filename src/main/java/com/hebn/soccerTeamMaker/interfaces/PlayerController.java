@@ -51,8 +51,8 @@ public class PlayerController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json; charset=utf8", consumes = "application/json; charset=utf8")
-    public ResponseEntity create(@RequestBody PlayerDto.Create createParam, Model model) {
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public ResponseEntity create(@RequestBody PlayerDto.Create createParam) {
         try {
             Player player = converter.convert(createParam);
             playerService.save(player);
