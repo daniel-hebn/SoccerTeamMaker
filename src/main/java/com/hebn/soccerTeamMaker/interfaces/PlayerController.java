@@ -63,16 +63,34 @@ public class PlayerController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/{playerId}/usable", method = RequestMethod.PUT, produces = "application/json; charset=utf8")
-    public ResponseEntity create(@PathVariable(value = "playerId") Long playerId,
+    @RequestMapping(value = "/{playerId}", method = RequestMethod.PUT, produces = "application/json; charset=utf8")
+    public ResponseEntity update(@PathVariable(value = "playerId") Long playerId,
                                  @RequestBody PlayerDto.Update updateParam) {
         try {
             Player player = playerService.findBy(playerId);
+            bindingPlayerFromDto(player, updateParam);
+            playerService.save(player);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            String rootCauseExceptionMessage = LoggingUtils.errorLogging(log, e, updateParam);
+            return new ResponseEntity(rootCauseExceptionMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    private void bindingPlayerFromDto(Player player, PlayerDto.Update updateParam) {
+        player.setAge(updateParam.getAge());
+        player.setBackNumber(updateParam.getBackNumber());
+        player.setPosition(Player.Position.valueOf(updateParam.getPosition()));
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/{playerId}/usable", method = RequestMethod.PUT, produces = "application/json; charset=utf8")
+    public ResponseEntity updateUsable(@PathVariable(value = "playerId") Long playerId,
+                                       @RequestBody PlayerDto.Update updateParam) {
+        try {
+            Player player = playerService.findBy(playerId);
             player.setUsable(updateParam.getUsable());
-
-
-            log.info("player name = {}", player.getName());
-
             playerService.save(player);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
@@ -80,7 +98,5 @@ public class PlayerController {
             return new ResponseEntity(rootCauseExceptionMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
 }

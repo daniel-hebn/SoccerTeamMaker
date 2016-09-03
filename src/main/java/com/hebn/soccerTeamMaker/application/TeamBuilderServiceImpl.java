@@ -3,7 +3,6 @@ package com.hebn.soccerTeamMaker.application;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hebn.soccerTeamMaker.domain.Player;
-import com.hebn.soccerTeamMaker.domain.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
 
     @Override
     public Map teamBuilding(Long teamId) {
-        List<Player> playerList = playerService.findByTeamId(teamId);
+        List<Player> playerList = playerService.findUsablePlayerByTeamId(teamId);
         List<Player> orderedPlayerList = playerList.stream()
                 .sorted(orderByLevel.thenComparing(orderByPosition))
                 .collect(toList());

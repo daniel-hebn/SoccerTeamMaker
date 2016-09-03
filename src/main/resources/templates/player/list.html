@@ -33,7 +33,9 @@
                     <tr th:each="player : ${playerList}">
                         <input type="hidden" th:value="${player.id}" name="playerId"/>
                         <td th:text="${player.backNumber}"/>
-                        <td th:text="${player.name}"/>
+                        <td>
+                            <a th:href="@{'/players/' + ${player.id}}" th:text="${player.name}"/>
+                        </td>
                         <td th:text="${player.position}"/>
                         <td>
                             <input type="checkbox" name="usable" th:checked="${player.usable}" th:value="${true}"/>
@@ -65,12 +67,10 @@
             });
         };
 
-
         $("table tbody tr input[name=usable]").click(function() {
             var playerId = $(this).parent().parent().find('[name=playerId]').val();
             changeUsable(playerId, $(this));
         });
-
     </script>
 </body>
 </html>

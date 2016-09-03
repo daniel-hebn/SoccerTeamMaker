@@ -16,6 +16,8 @@ public interface PlayerService {
 
     List<Player> findByTeamId(Long teamId);
 
+    List<Player> findUsablePlayerByTeamId(Long teamId);
+
     Page<Player> findByCondition(Predicate predicate, Pageable pageable);
 
     Long countAll();

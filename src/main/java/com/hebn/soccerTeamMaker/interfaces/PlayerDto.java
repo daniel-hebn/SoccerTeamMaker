@@ -27,6 +27,7 @@ public class PlayerDto {
 
     @Data
     public static class Create {
+        private Integer age;
         private Integer backNumber;
         private String level;
         private String name;
@@ -36,10 +37,9 @@ public class PlayerDto {
 
     @Data
     public static class Update {
+        private Integer age;
         private Integer backNumber;
-        private String level;
-        private String name;
         private String position;
-        private Boolean usable;
+        private Boolean usable = true;
     }
 }
