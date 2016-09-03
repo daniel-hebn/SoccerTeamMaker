@@ -1,9 +1,12 @@
 package com.hebn.soccerTeamMaker.interfaces;
 
+import com.google.common.collect.Maps;
 import com.hebn.soccerTeamMaker.application.TeamBuilderService;
 import com.hebn.soccerTeamMaker.domain.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,113 +30,58 @@ public class TeamController {
     private TeamBuilderService teamBuilderService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String teamMemberTableView() {
-        return "test";
+    public String initView() {
+        return "team/team-view";
     }
 
     @ResponseBody
-    @RequestMapping(value = "/generator", method = RequestMethod.GET, produces = "application/json; charset=utf8")
-    public String teamBuilding() {
+    @RequestMapping(value = "/generator", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public ResponseEntity teamBuilding() {
         Map<String, List<Player>> teamListMap = teamBuilderService.teamBuilding(1L);
 
         List<Player> firstTeamList = teamListMap.get(TeamBuilderService.FIRST_TEAM_NAME);
         List<Player> secondTeamList = teamListMap.get(TeamBuilderService.SECOND_TEAM_NAME);
 
-        // TODO - 임시 코드
         Map<Player.Position, List<Player>> firstTeamListGroupingByPosition
                 = firstTeamList.stream().collect(groupingBy(Player::getPosition));
         Map<Player.Position, List<Player>> secondTeamListGroupingByPosition
                 = secondTeamList.stream().collect(groupingBy(Player::getPosition));
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(">> A-Team PlayerList");
+        // 팀 맴버 분배 결과 생성
+        Map<String, String> positionMemberMap = Maps.newHashMap();
 
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
-        sb.append("Forward : ");
-        sb.append(System.lineSeparator());
-
+        // NOTE: FORWARD member joining
         List<Player> firstForwardList = firstTeamListGroupingByPosition.get(Player.Position.FORWARD);
-        sb.append(firstForwardList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
-        sb.append("Midfielder : ");
-        sb.append(System.lineSeparator());
-
-        List<Player> firstMidfielderList = firstTeamListGroupingByPosition.get(Player.Position.MIDFIELDER);
-        sb.append(firstMidfielderList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
-        sb.append("Defender : ");
-        sb.append(System.lineSeparator());
-
-        List<Player> firstDefenderList = firstTeamListGroupingByPosition.get(Player.Position.DEFENDER);
-        sb.append(firstDefenderList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
-        sb.append("GoalKeeper : ");
-        sb.append(System.lineSeparator());
-
-        List<Player> firstGoalkeeperList = firstTeamListGroupingByPosition.get(Player.Position.GOALKEEPER);
-        sb.append(firstGoalkeeperList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
-        sb.append(">> B-Team PlayerList");
-
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
-
-        sb.append("Forward : ");
-        sb.append(System.lineSeparator());
+        positionMemberMap.put("firstForwardList", firstForwardList.stream().map(p -> p.getName()).collect(joining(", ")));
 
         List<Player> secondForwardList = secondTeamListGroupingByPosition.get(Player.Position.FORWARD);
-        sb.append(secondForwardList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
+        positionMemberMap.put("secondForwardList", secondForwardList.stream().map(p -> p.getName()).collect(joining(", ")));
 
-        sb.append("Midfielder : ");
-        sb.append(System.lineSeparator());
+
+        // NOTE: MIDFIELDER member joining
+        List<Player> firstMidfielderList = firstTeamListGroupingByPosition.get(Player.Position.MIDFIELDER);
+        positionMemberMap.put("firstMidfielderList", firstMidfielderList.stream().map(p -> p.getName()).collect(joining(", ")));
 
         List<Player> secondMidfielderList = secondTeamListGroupingByPosition.get(Player.Position.MIDFIELDER);
-        sb.append(secondMidfielderList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
+        positionMemberMap.put("secondMidfielderList", secondMidfielderList.stream().map(p -> p.getName()).collect(joining(", ")));
 
-        sb.append("Defender : ");
-        sb.append(System.lineSeparator());
+
+        // NOTE: MIDFIELDER member joining
+        List<Player> firstDefenderList = firstTeamListGroupingByPosition.get(Player.Position.DEFENDER);
+        positionMemberMap.put("firstDefenderList", firstDefenderList.stream().map(p -> p.getName()).collect(joining(", ")));
 
         List<Player> secondDefenderList = secondTeamListGroupingByPosition.get(Player.Position.DEFENDER);
-        sb.append(secondDefenderList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
+        positionMemberMap.put("secondDefenderList", secondDefenderList.stream().map(p -> p.getName()).collect(joining(", ")));
 
-        sb.append("GoalKeeper : ");
-        sb.append(System.lineSeparator());
+
+        // NOTE: GOALKEEPER member joining
+        List<Player> firstGoalkeeperList = firstTeamListGroupingByPosition.get(Player.Position.GOALKEEPER);
+        positionMemberMap.put("firstGoalkeeperList", firstGoalkeeperList.stream().map(p -> p.getName()).collect(joining(", ")));
 
         List<Player> secondGoalkeeperList = secondTeamListGroupingByPosition.get(Player.Position.GOALKEEPER);
-        sb.append(secondGoalkeeperList.stream().map(p -> p.getName()).collect(joining(", ")));
-        sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
+        positionMemberMap.put("secondGoalkeeperList", secondGoalkeeperList.stream().map(p -> p.getName()).collect(joining(", ")));
 
-        return sb.toString();
+        return new ResponseEntity(positionMemberMap, HttpStatus.OK);
     }
 
-
-//    @ResponseBody
-//    @RequestMapping(value = "/memberTables", method = RequestMethod.GET)
-//    public ResponseEntity teamMemberList() {
-//        Map<String, List<Player>> teamListMap = teamBuilderService.teamBuilding(1L);
-//
-//        List<Player> firstTeamList = teamListMap.get(TeamBuilderService.FIRST_TEAM_NAME);
-//        List<Player> secondTeamList = teamListMap.get(TeamBuilderService.SECOND_TEAM_NAME);
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 }

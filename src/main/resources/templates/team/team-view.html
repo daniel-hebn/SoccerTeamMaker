@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no"/>
+    <title>A / B 팀 구성표</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
+</head>
+<body>
+    <div class="container">
+        <h1>A / B 팀 구성표</h1>
+        <div class="container-fluid" style="margin-top:30px;">
+            <div class="row">
+                <p class="text-right">
+                    <button id="teamGenBtn" class="btn btn-primary" type="button">팀 생성</button>
+                </p>
+            </div>
+        </div>
+        <div class="table-responsive" style="margin-top:30px;">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>A-Team</td>
+                        <td>B-Team</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-xs-center">FW</td>
+                        <td class="first-team-forward"></td>
+                        <td class="second-team-forward"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-xs-center">MF</td>
+                        <td class="first-team-midfielder"></td>
+                        <td class="second-team-midfielder"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-xs-center">DF</td>
+                        <td class="first-team-defender"></td>
+                        <td class="second-team-defender"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-xs-center">GK</td>
+                        <td class="first-team-goalkeeper"></td>
+                        <td class="second-team-goalkeeper"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <script>
+        var teamGenerator = function () {
+            $.ajax({
+                type: 'POST',
+                url: '/teams/generator',
+                contentType: 'application/json; charset=UTF-8'
+            }).done(function (data) {
+                console.log('data = ', data);
+
+                $('.first-team-forward').text(data.firstForwardList);
+                $('.second-team-forward').text(data.secondForwardList);
+
+                $('.first-team-midfielder').text(data.firstMidfielderList);
+                $('.second-team-midfielder').text(data.secondMidfielderList);
+
+                $('.first-team-defender').text(data.firstDefenderList);
+                $('.second-team-defender').text(data.secondDefenderList);
+
+                $('.first-team-goalkeeper').text(data.firstGoalkeeperList);
+                $('.second-team-goalkeeper').text(data.secondGoalkeeperList);
+            }).fail(function (data, textStatus, xhr) {
+                console.log("System Error. errorInfo = ", data.responseText, textStatus, xhr);
+                alert(data.responseText || alert('팀 생성 중 에러가 발생했습니다.'));
+            });
+        };
+
+        $("#teamGenBtn").click(function() {
+            teamGenerator();   // NOTE: Eden FC Team Id. 추후 필요시 확장
+        });
+    </script>
+</body>
+</html>

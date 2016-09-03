@@ -46,26 +46,20 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
 
         // Step 2
         // 랜덤 요소 추가 - 양 팀에서 같은 레벨과 포지션을 가지는 맴버 교환. 교환 맴버 수 / 포지션은 가능한 선에서 랜덤
-        final Player.Level levelChangeSelector = getLevelChangeSelector();
-        final Player.Position positionChangeSelector = getPositionChangeSelector();
-
-        long firstTeamCountByPositionAndLevel = firstTeamList.stream().filter(getSameLevelAndPositionFilter(levelChangeSelector, positionChangeSelector)).count();
-        long secondTeamCountByPositionAndLevel = secondTeamList.stream().filter(getSameLevelAndPositionFilter(levelChangeSelector, positionChangeSelector)).count();
-
-        long changeableMaxCount = firstTeamCountByPositionAndLevel > secondTeamCountByPositionAndLevel ? secondTeamCountByPositionAndLevel : firstTeamCountByPositionAndLevel;
-        int changeCountFactor = (int) ((Math.random() + 1) * changeableMaxCount); // NOTE: 교환 횟수 - 교환이 가능하다면 최소 한 번
-
-        swapTeamPlayerBySameLevelAndSamePosition(firstTeamList, secondTeamList, levelChangeSelector, positionChangeSelector, changeCountFactor);
+        // 재미를 위해 랜덤 섞기는 2번 실행
+        randomSwapTeamPlayerBySameLevelAndSamePosition(firstTeamList, secondTeamList);
+        randomSwapTeamPlayerBySameLevelAndSamePosition(firstTeamList, secondTeamList);
 
         // Step 3
         // HIGH Level 이면서 팀 맴버 숫자가 많을 경우, 해당 팀의 MIDDLE Level 1명을 반대 팀으로 이동 시키기
         transferAnyPositionMiddleLevelPlayerForBalancing(firstTeamList, secondTeamList);
 
-
         // Step 4
         // 포지션 불균형일 경우 - 각 팀에서 부족한 포지션을 가지는 동일 레벨 맴버 교환
         swapTeamPlayerBySameLevelWhenPositionUnBalanced(firstTeamList, secondTeamList);
 
+        // Step 5
+        // 최종 결과 리턴
         Map teamListMap = Maps.newHashMap();
         teamListMap.put(TeamBuilderService.FIRST_TEAM_NAME, firstTeamList);
         teamListMap.put(TeamBuilderService.SECOND_TEAM_NAME, secondTeamList);
@@ -82,6 +76,19 @@ public class TeamBuilderServiceImpl implements TeamBuilderService {
                 secondTeamList.add(player);
             }
         });
+    }
+
+    private void randomSwapTeamPlayerBySameLevelAndSamePosition(List<Player> firstTeamList, List<Player> secondTeamList) {
+        final Player.Level levelChangeSelector = getLevelChangeSelector();
+        final Player.Position positionChangeSelector = getPositionChangeSelector();
+
+        long firstTeamCountByPositionAndLevel = firstTeamList.stream().filter(getSameLevelAndPositionFilter(levelChangeSelector, positionChangeSelector)).count();
+        long secondTeamCountByPositionAndLevel = secondTeamList.stream().filter(getSameLevelAndPositionFilter(levelChangeSelector, positionChangeSelector)).count();
+
+        long changeableMaxCount = firstTeamCountByPositionAndLevel > secondTeamCountByPositionAndLevel ? secondTeamCountByPositionAndLevel : firstTeamCountByPositionAndLevel;
+        int changeCountFactor = (int) ((Math.random() + 1) * changeableMaxCount); // NOTE: 교환 횟수 - 교환이 가능하다면 최소 한 번
+
+        swapTeamPlayerBySameLevelAndSamePosition(firstTeamList, secondTeamList, levelChangeSelector, positionChangeSelector, changeCountFactor);
     }
 
     private Player.Level getLevelChangeSelector() {
