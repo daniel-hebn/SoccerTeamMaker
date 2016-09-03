@@ -34,7 +34,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         QPlayer player = QPlayer.player;
-        booleanBuilder.and(player.usable.eq(true));
+//        booleanBuilder.and(player.usable.eq(true));
         booleanBuilder.and(player.team.id.eq(teamId));
         return Lists.newArrayList(playerRepository.findAll(booleanBuilder.getValue()));
     }

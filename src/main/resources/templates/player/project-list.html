@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/common-list" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>프로젝트 목록</title>
+    <link rel="stylesheet" th:href="@{/static/_styles/project/project-list.css}"/>
+    <script th:src="@{/static/_scripts/project/project-list.js}"></script>
+</head>
+<body>
+<h2 layout:fragment="list-title">프로젝트 목록</h2>
+<button layout:fragment="btn-new" id="new-project">프로젝트 등록</button>
+<div layout:fragment="search-block">
+    <div class="col-sm-4">
+        <label for="status">상태</label>
+        <select name="status" id="status">
+            <option value="" selected="selected">전체</option>
+            <option th:each="item : ${T(com.idincu.project.domain.project.project.ProjectStatus).values()}"
+                    th:value="${item.name()}" th:text="${item.description}"/>
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <label for="name">프로젝트명</label>
+        <input type="text" name="name" id="name"/>
+    </div>
+    <div class="col-sm-4">
+        <label for="projectNo">프로젝트 번호</label>
+        <input type="text" name="projectNo" id="projectNo"/>
+    </div>
+    <div class="col-sm-4">
+        <label for="customerType">고객유형</label>
+        <select name="customerType" id="customerType">
+            <option value="" selected="selected">전체</option>
+            <option th:each="item : ${T(com.idincu.project.domain.project.project.CustomerType).values()}"
+                    th:value="${item.name()}" th:text="${item.description}"/>
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <label for="accountName">어카운트명</label>
+        <input type="text" name="accountName" id="accountName"/>
+    </div>
+    <div class="col-sm-4">
+        <label for="managerName">PM</label>
+        <input type="text" name="managerName" id="managerName"/>
+    </div>
+    <div class="col-sm-4">
+        <label for="project-begin-date">시작일</label>
+        <div id="project-begin-date" class="range-input">
+            <div class="start-date input-group date">
+                <input class="inline" type="text" name="formattedProjectBeginStartDate"/>
+                <div class="input-group-addon date-picker-btn"><span class="glyphicon glyphicon-calendar"></span></div>
+            </div>
+            <input type="hidden" name="projectBeginStartDate"/>
+            ~
+            <div class="end-date input-group date">
+                <input class="inline" type="text" name="formattedProjectBeginEndDate"/>
+                <div class="input-group-addon date-picker-btn"><span class="glyphicon glyphicon-calendar"></span></div>
+            </div>
+            <input type="hidden" name="projectBeginEndDate"/>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <label for="project-complete-date">완료일</label>
+        <div id="project-complete-date" class="range-input">
+            <div class="start-date input-group date">
+                <input class="inline" type="text" name="formattedProjectCompleteStartDate"/>
+                <div class="input-group-addon date-picker-btn"><span class="glyphicon glyphicon-calendar"></span></div>
+            </div>
+            <input type="hidden" name="projectCompleteStartDate"/>
+            ~
+            <div class="end-date input-group date">
+                <input class="inline" type="text" name="formattedProjectCompleteEndDate"/>
+                <div class="input-group-addon date-picker-btn"><span class="glyphicon glyphicon-calendar"></span></div>
+            </div>
+            <input type="hidden" name="projectCompleteEndDate"/>
+        </div>
+    </div>
+    <div class="col-sm-offset-8 col-sm-4">
+        <button id="search" type="button">검색하기</button>
+    </div>
+</div>
+<table layout:fragment="list">
+    <thead>
+    <tr>
+        <th class="search">프로젝트 번호</th>
+        <th class="search">상태</th>
+        <th class="search">프로젝트명</th>
+        <th class="search">어카운트명</th>
+        <th class="search">PM</th>
+        <th class="range-search">시작일</th>
+        <th class="range-search">완료일</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+</body>
+</html>

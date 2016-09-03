@@ -33,4 +33,13 @@ public class PlayerDto {
         private String position;
         private Integer teamId;
     }
+
+    @Data
+    public static class Update {
+        private Integer backNumber;
+        private String level;
+        private String name;
+        private String position;
+        private Boolean usable;
+    }
 }

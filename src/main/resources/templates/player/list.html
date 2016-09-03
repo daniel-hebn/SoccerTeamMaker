@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no"/>
+    <title>선수 리스트</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
 </head>
 <body>
+    <div class="container">
+        <h1>선수 리스트</h1>
+        <div class="container-fluid">
+            <div class="row">
+                <p class="text-right">
+                    <a href="/players/new">
+                        <span class="glyphicon glyphicon-plus">선수 추가</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <td>등번호</td>
+                        <td>이름</td>
+                        <td>포지션</td>
+                        <td>참석여부</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="player : ${playerList}">
+                        <input type="hidden" th:value="${player.id}" name="playerId"/>
+                        <td th:text="${player.backNumber}"/>
+                        <td th:text="${player.name}"/>
+                        <td th:text="${player.position}"/>
+                        <td>
+                            <input type="checkbox" name="usable" th:checked="${player.usable}" th:value="${true}"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <script>
+        var changeUsable = function (playerId, obj) {
+            var $this = $(obj);
+            var usable = $this.is(":checked");
+
+            $.ajax({
+                type: 'PUT',
+                url: '/players/' + playerId + '/usable',
+                data: JSON.stringify({'usable': usable}),
+                contentType: 'application/json; charset=UTF-8'
+            }).done(function () {
+                alert('시합 참여 여부를 변경하였습니다.');
+            }).fail(function (data, textStatus, xhr) {
+                console.log("System Error. errorInfo = ", data.responseText, textStatus, xhr);
+                alert(data.responseText || alert('시합 참여 여부 변경 중 에러가 발생했습니다.'));
+            });
+        };
+
+
+        $("table tbody tr input[name=usable]").click(function() {
+            var playerId = $(this).parent().parent().find('[name=playerId]').val();
+            changeUsable(playerId, $(this));
+        });
+
+    </script>
 </body>
 </html>

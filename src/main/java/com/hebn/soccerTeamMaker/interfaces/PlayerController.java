@@ -30,10 +30,8 @@ public class PlayerController {
     private PlayerConverter converter;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(@ModelAttribute(value = "param") PlayerDto.RetrieveCondition condition,
-                       @PageableDefault(page = 0, value = 10) Pageable pageable, Model model) {
-        Predicate predicate = converter.convert(condition);
-        model.addAttribute("playerList", playerService.findByCondition(predicate, pageable));
+    public String list(Model model) {
+        model.addAttribute("playerList", playerService.findByTeamId(1L));
         return "player/list";
     }
 
@@ -62,4 +60,27 @@ public class PlayerController {
             return new ResponseEntity(rootCauseExceptionMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/{playerId}/usable", method = RequestMethod.PUT, produces = "application/json; charset=utf8")
+    public ResponseEntity create(@PathVariable(value = "playerId") Long playerId,
+                                 @RequestBody PlayerDto.Update updateParam) {
+        try {
+            Player player = playerService.findBy(playerId);
+            player.setUsable(updateParam.getUsable());
+
+
+            log.info("player name = {}", player.getName());
+
+            playerService.save(player);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            String rootCauseExceptionMessage = LoggingUtils.errorLogging(log, e, updateParam);
+            return new ResponseEntity(rootCauseExceptionMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 }
