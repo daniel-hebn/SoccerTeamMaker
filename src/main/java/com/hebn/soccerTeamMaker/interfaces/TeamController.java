@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,37 +52,32 @@ public class TeamController {
         Map<String, String> positionMemberMap = Maps.newHashMap();
 
         // NOTE: FORWARD member joining
-        List<Player> firstForwardList = firstTeamListGroupingByPosition.get(Player.Position.FORWARD);
-        positionMemberMap.put("firstForwardList", firstForwardList.stream().map(p -> p.getName()).collect(joining(", ")));
-
-        List<Player> secondForwardList = secondTeamListGroupingByPosition.get(Player.Position.FORWARD);
-        positionMemberMap.put("secondForwardList", secondForwardList.stream().map(p -> p.getName()).collect(joining(", ")));
-
+        setPlayerListByPositionInto(positionMemberMap, firstTeamListGroupingByPosition, Player.Position.FORWARD, "firstForwardList");
+        setPlayerListByPositionInto(positionMemberMap, secondTeamListGroupingByPosition, Player.Position.FORWARD, "secondForwardList");
 
         // NOTE: MIDFIELDER member joining
-        List<Player> firstMidfielderList = firstTeamListGroupingByPosition.get(Player.Position.MIDFIELDER);
-        positionMemberMap.put("firstMidfielderList", firstMidfielderList.stream().map(p -> p.getName()).collect(joining(", ")));
-
-        List<Player> secondMidfielderList = secondTeamListGroupingByPosition.get(Player.Position.MIDFIELDER);
-        positionMemberMap.put("secondMidfielderList", secondMidfielderList.stream().map(p -> p.getName()).collect(joining(", ")));
-
+        setPlayerListByPositionInto(positionMemberMap, firstTeamListGroupingByPosition, Player.Position.MIDFIELDER, "firstMidfielderList");
+        setPlayerListByPositionInto(positionMemberMap, secondTeamListGroupingByPosition, Player.Position.MIDFIELDER, "secondMidfielderList");
 
         // NOTE: MIDFIELDER member joining
-        List<Player> firstDefenderList = firstTeamListGroupingByPosition.get(Player.Position.DEFENDER);
-        positionMemberMap.put("firstDefenderList", firstDefenderList.stream().map(p -> p.getName()).collect(joining(", ")));
-
-        List<Player> secondDefenderList = secondTeamListGroupingByPosition.get(Player.Position.DEFENDER);
-        positionMemberMap.put("secondDefenderList", secondDefenderList.stream().map(p -> p.getName()).collect(joining(", ")));
-
+        setPlayerListByPositionInto(positionMemberMap, firstTeamListGroupingByPosition, Player.Position.DEFENDER, "firstDefenderList");
+        setPlayerListByPositionInto(positionMemberMap, secondTeamListGroupingByPosition, Player.Position.DEFENDER, "secondDefenderList");
 
         // NOTE: GOALKEEPER member joining
-        List<Player> firstGoalkeeperList = firstTeamListGroupingByPosition.get(Player.Position.GOALKEEPER);
-        positionMemberMap.put("firstGoalkeeperList", firstGoalkeeperList.stream().map(p -> p.getName()).collect(joining(", ")));
-
-        List<Player> secondGoalkeeperList = secondTeamListGroupingByPosition.get(Player.Position.GOALKEEPER);
-        positionMemberMap.put("secondGoalkeeperList", secondGoalkeeperList.stream().map(p -> p.getName()).collect(joining(", ")));
+        setPlayerListByPositionInto(positionMemberMap, firstTeamListGroupingByPosition, Player.Position.GOALKEEPER, "firstGoalkeeperList");
+        setPlayerListByPositionInto(positionMemberMap, secondTeamListGroupingByPosition, Player.Position.GOALKEEPER, "secondGoalkeeperList");
 
         return new ResponseEntity(positionMemberMap, HttpStatus.OK);
     }
 
+    private void setPlayerListByPositionInto(Map<String, String> positionMemberMap,
+                                             Map<Player.Position, List<Player>> teamListGroupingByPosition,
+                                             Player.Position position, String playerPositionListName) {
+        List<Player> playerList = teamListGroupingByPosition.get(position);
+        if (CollectionUtils.isEmpty(playerList)) {
+            positionMemberMap.put(playerPositionListName, "");
+        } else {
+            positionMemberMap.put(playerPositionListName, playerList.stream().map(p -> p.getName()).collect(joining(", ")));
+        }
+    }
 }
