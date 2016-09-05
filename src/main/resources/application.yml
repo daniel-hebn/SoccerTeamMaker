@@ -20,6 +20,10 @@ spring:
       enabled: true
       path: /h2-console
 
+# develop 에서는 migration 설정 안함. 데이터를 직접 넣어 쓰던지 하세요.
+flyway:
+  enabled: false
+
 ---
 spring:
   profiles: production
@@ -28,7 +32,7 @@ spring:
     url: jdbc:mysql://secret
 #    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: hebn
-    password: secretPw
+    password: secret
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
