@@ -16,6 +16,7 @@ CREATE TABLE `player` (
   `name` varchar(255) DEFAULT NULL,
   `position` varchar(255) DEFAULT NULL,
   `team_id` bigint(20) DEFAULT NULL,
+  `usable` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `FKdvd6ljes11r44igawmpm1mc5s` (`team_id`),
   CONSTRAINT `FKdvd6ljes11r44igawmpm1mc5s` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`)
