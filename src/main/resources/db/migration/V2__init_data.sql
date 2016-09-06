@@ -3,7 +3,7 @@ insert into team (name) values ('Eden FC');
 
 insert into player (back_number, level, name, position, team_id)  values (1, 'MIDDLE', '김현', 'GOALKEEPER' , 1) ;
 insert into player (back_number, level, name, position, team_id)  values (3, 'MIDDLE', '황다빈', 'DEFENDER' , 1) ;
-insert into player (back_number, level, name, position, team_id)  values (6, 'MIDDLE', '장도영', 'GOALKEEPER' , 1) ;
+insert into player (age, back_number, level, name, position, team_id)  values (30, 6, 'MIDDLE', '장도영', 'GOALKEEPER' , 1) ;
 insert into player (back_number, level, name, position, team_id)  values (7, 'MIDDLE', '최정욱', 'FORWARD' , 1) ;
 insert into player (back_number, level, name, position, team_id)  values (8, 'MIDDLE', '임진규', 'MIDFIELDER' , 1) ;
 insert into player (back_number, level, name, position, team_id)  values (9, 'HIGH', '김호식', 'DEFENDER' , 1) ;
@@ -20,3 +20,6 @@ insert into player (back_number, level, name, position, team_id)  values (20, 'L
 insert into player (back_number, level, name, position, team_id)  values (23, 'MIDDLE', '박주현', 'DEFENDER' , 1) ;
 insert into player (back_number, level, name, position, team_id)  values (98, 'LOW', '김희범', 'MIDFIELDER' , 1) ;
 insert into player (back_number, level, name, position, team_id)  values (99, 'HIGH', '양인철', 'MIDFIELDER' , 1) ;
+insert into player (back_number, level, name, position, team_id)  values (99, 'HIGH', '박찬솔', 'FORWARD' , 1) ;
+insert into player (back_number, level, name, position, team_id)  values (99, 'HIGH', '정하윤', 'FORWARD' , 1) ;
+insert into player (back_number, level, name, position, team_id)  values (99, 'HIGH', '이해든', 'MIDFIELDER' , 1) ;
